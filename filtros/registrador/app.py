@@ -26,11 +26,12 @@ def registrar():
             return jsonify({"mensaje": f"Ya existe paciente con la cedula {cedula}"}), 400
         cursor.execute("INSERT INTO pacientes (cedula, nombre, apellido, telefono, email) VALUES (%s,%s,%s,%s,%s) RETURNING *", (cedula, nombre, apellido, telefono, email))
         paciente = cursor.fetchone()
+        conn.commit()
         cursor.close()
         conn.close()
-        return jsonify({"estado": "ok", "mensaje": "Registrado Exitosamente"}), 201
+        return jsonify({"estado": "ok", "mensaje": "Registrado Exitosamente", "paciente_id": paciente["id"]}), 201
     except Exception as error:
-        return jsonify({"estado": "error", "mensaje": error}), 500
+        return jsonify({"estado": "error", "mensaje": str(error)}), 500
 
 @app.route("/pacientes", methods = ["GET"])
 def listar_pacientes():
@@ -43,7 +44,7 @@ def listar_pacientes():
         conn.close()
         return jsonify({"estado": "ok", "datos": pacientes}), 200
     except Exception as error:
-        return jsonify({"estado": "error", "mensaje": error})
+        return jsonify({"estado": "error", "mensaje": str(error)})
 
 if __name__ == "__main__":
     app.run(port=504, debug=True)

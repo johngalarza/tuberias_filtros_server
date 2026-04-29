@@ -29,7 +29,6 @@ def ejecutar_pipeline():
                 "historial": historial
             }), 503
 
-        # 👇 Validar respuesta
         try:
             resultado = respuesta.json()
         except ValueError:
@@ -58,8 +57,6 @@ def ejecutar_pipeline():
 
     return jsonify({
         "estado": "ok",
-        "mensaje": "Paciente registrado correctamente",
-        "paciente_id": contexto.get("paciente_id"),
         "historial": historial
     }), 200
 
